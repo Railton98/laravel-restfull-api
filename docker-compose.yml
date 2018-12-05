@@ -1,0 +1,35 @@
+# v3 syntax
+version: "3"
+
+# Named volumes
+volumes:
+  # MySQL Data
+  myapp-mysql-data:
+    driver: local
+
+services:
+  # MySQL (5.7)
+  mysql:
+    image: mysql:5.7
+    container_name: myapp-mysql
+    volumes:
+      - myapp-mysql-data:/var/lib/mysql
+    ports:
+      - "3305:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=myapp
+      - MYSQL_DATABASE=myapp
+      - MYSQL_USER=myapp
+      - MYSQL_PASSWORD=myapp
+  # PHP (with Caddy)
+  app:
+    image: ambientum/php:7.2-nginx
+    container_name: myapp-app
+    depends_on:
+      - mysql
+    volumes:
+      - .:/var/www/app
+    ports:
+      - "8080:8080"
+    links:
+      - mysql

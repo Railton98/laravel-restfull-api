@@ -4,27 +4,27 @@ version: "3"
 # Named volumes
 volumes:
   # MySQL Data
-  myapp-mysql-data:
+  son-rest-api-mysql-data:
     driver: local
 
 services:
   # MySQL (5.7)
   mysql:
     image: mysql:5.7
-    container_name: myapp-mysql
+    container_name: son-rest-api-mysql
     volumes:
-      - myapp-mysql-data:/var/lib/mysql
+      - son-rest-api-mysql-data:/var/lib/mysql
     ports:
       - "3305:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=myapp
-      - MYSQL_DATABASE=myapp
-      - MYSQL_USER=myapp
-      - MYSQL_PASSWORD=myapp
-  # PHP (with Caddy)
+      - MYSQL_ROOT_PASSWORD=son-rest-api
+      - MYSQL_DATABASE=son-rest-api
+      - MYSQL_USER=son-rest-api
+      - MYSQL_PASSWORD=son-rest-api
+  # PHP (with Nginx)
   app:
     image: ambientum/php:7.2-nginx
-    container_name: myapp-app
+    container_name: son-rest-api-app
     depends_on:
       - mysql
     volumes:

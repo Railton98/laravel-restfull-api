@@ -23,3 +23,8 @@ Route::middleware('auth:api')->prefix('v1')->group(function () {
         'users' => 'UserController',
     ]);
 });
+
+// test of cors
+Route::get('cors', function () {
+    return ['key' => 'value'];
+});

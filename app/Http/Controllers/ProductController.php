@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest as Request;
 use App\Models\Product;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -14,7 +15,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::all();
+        $minutes = Carbon::now()->addMinutes(10);
+        $products = \Cache::remember('api::products', $minutes, function () {
+            return Product::all();
+        });
+        return $products;
     }
 
     /**
@@ -25,6 +30,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
+        \Cache::forget('api::products');
         $data = $request->all();
         $data['user_id'] = auth()->user()->id;
 
@@ -63,6 +69,7 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        \Cache::forget('api::products');
         $this->authorize('delete', $product);
         $product->delete();
         return $product;
